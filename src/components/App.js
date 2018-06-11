@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Button from "@material-ui/core/Button";
-import { Icon } from "@material-ui/core";
+import { Icon, Fade } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -14,6 +14,25 @@ import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
+import Popover from "@material-ui/core/Popover";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import ListItemText from "@material-ui/core/ListItemText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+
+import Avatar from "@material-ui/core/Avatar";
+import PersonIcon from "@material-ui/icons/Person";
+import AddIcon from "@material-ui/icons/Add";
+import SimpleDialogWrapped from "./SimpleDialog";
+import Slide from "@material-ui/core/Slide";
+import MyComponent from "./MyComponent";
+
+import Switch from "@material-ui/core/Switch";
 
 const debug = theme => console.log(theme);
 // MUIThemeProvider voir palette dans les props
@@ -57,7 +76,36 @@ const styles = theme => ({
   }
 });
 
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
+
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      anchorEl: null,
+      open: false,
+      selectedValue: "toto@free.fr"
+    };
+  }
+
+  handleClick = event => {
+    this.setState({
+      anchorEl: event.currentTarget
+    });
+  };
+
+  handleClickOpen = () => {
+    this.setState({
+      open: true
+    });
+  };
+
+  handleClose = value => {
+    this.setState({ selectedValue: value, open: false });
+  };
+
   render() {
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
@@ -117,7 +165,7 @@ class App extends Component {
         </Grid>
 
         <header className="App-header">
-          <StyledButton>Niceeee</StyledButton>
+          <StyledButton color="info">Niceeee Styled Button</StyledButton>
           <Button variant="contained" color="primary">
             <Icon>face</Icon> Hello World
           </Button>
@@ -126,18 +174,100 @@ class App extends Component {
           </Button>
         </header>
 
+        <MyComponent />
+
+        <Button onClick={this.handleClickOpen}>Open simple dialog</Button>
+        {/*<SimpleDialogWrapped
+          selectedValue={this.state.selectedValue}
+          open={this.state.open}
+          onClose={this.handleClose}
+        />*/}
+
+        <div>
+          <Button onClick={this.handleClickOpen}>Slide in alert dialog</Button>
+          <Dialog
+            open={this.state.open}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={this.handleClose}
+            aria-labelledby="alert-dialog-slide-title"
+            aria-describedby="alert-dialog-slide-description"
+          >
+            <DialogTitle id="alert-dialog-slide-title">
+              {"Use Google's location service?"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                Let Google help apps determine location. This means sending
+                anonymous location data to Google, even when no apps are
+                running.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleClose} color="primary">
+                Disagree
+              </Button>
+              <Button onClick={this.handleClose} color="primary">
+                Agree
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+
+        <Button variant="contained" onClick={this.handleClick}>
+          Open Popover
+        </Button>
+        <Popover
+          open={Boolean(this.anchorEl)}
+          anchorEl={this.anchorEl}
+          onClose={this.handleClose}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          transformOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Typography className={classes.typography}>
+            The content of the Popover.
+          </Typography>
+        </Popover>
         <Grid container spacing={40}>
           <Grid item xs={12}>
             <Grid container justify="center" spacing={Number(40)}>
               {[0, 1, 2].map(value => (
                 <Grid key={value} item>
-                  <Paper className={classes.root} square="true" elevation={4}>
+                  <Paper className={classes.root} elevation={4}>
                     <Typography variant="headline" component="h3">
                       This is a sheet of paper.
                     </Typography>
                     <Typography component="p">
                       Paper can be used to build surface
                     </Typography>
+                  </Paper>
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <br />
+
+        <Grid container className={classes.root}>
+          <Grid item xs={12}>
+            <Grid
+              container
+              spacing={16}
+              alignItems="center"
+              direction="row"
+              justify="center"
+            >
+              {[0, 1, 2].map(value => (
+                <Grid key={value} item>
+                  <Paper
+                    className={classes.paper}
+                    style={{
+                      paddingTop: (value + 1) * 10,
+                      paddingBottom: (value + 1) * 10
+                    }}
+                  >
+                    {`Cell ${value + 1}`}
                   </Paper>
                 </Grid>
               ))}

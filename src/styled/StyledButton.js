@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 
 const StyledButton = styled(Button)`
-  && {
+  ${props => console.log(props.theme)} && {
     background: linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%);
     border-radius: 3px;
     border: 0;
